@@ -19,6 +19,7 @@ const Movie = mongoose.model('Movie', movieSchema);
 
 app.use(express.static(path.join(__dirname, '/')));
 
+// ১. মুভি লিস্ট পাওয়ার রুট
 app.get('/api/movies', async (req, res) => {
     try {
         const movies = await Movie.find();
@@ -28,7 +29,7 @@ app.get('/api/movies', async (req, res) => {
     }
 });
 
-// এই রুটটি আপনার ডাটাবেসে মুভি যোগ করবে
+// ২. স্যাম্পল মুভি যোগ করার রুট
 app.get('/add-sample', async (req, res) => {
     try {
         const sampleMovies = [
@@ -36,14 +37,19 @@ app.get('/add-sample', async (req, res) => {
             { title: "Interstellar", image: "https://m.media-amazon.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjktY2FiMmZkNWIyODZiXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg", rating: "8.7", genre: "Adventure" }
         ];
         await Movie.insertMany(sampleMovies);
-        res.send("<h1>Movies added successfully! Now visit your home page.</h1>");
+        res.send("<h1>Success! Movies added. Visit your home page.</h1>");
     } catch (err) {
         res.status(500).send(err.message);
     }
 });
 
-app.get('/*', (req, res) => {
+// ৩. এরর এড়ানোর জন্য সঠিক রুট পদ্ধতি
+app.use((req, res, next) => {
+    if (req.path.startsWith('/api') || req.path === '/add-sample') {
+        return next();
+    }
     res.sendFile(path.join(__dirname, 'index.html'));
 });
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
