@@ -30,7 +30,18 @@ app.get('/api/movies', async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 });
-
+app.get('/add-sample', async (req, res) => {
+    try {
+        const sampleMovies = [
+            { title: "Inception", image: "https://bit.ly/3YQ6p5X", rating: "8.8", genre: "Sci-Fi" },
+            { title: "Interstellar", image: "https://bit.ly/3YQ6p5X", rating: "8.7", genre: "Adventure" }
+        ];
+        await Movie.insertMany(sampleMovies);
+        res.send("Sample movies added successfully!");
+    } catch (err) {
+        res.status(500).send(err.message);
+    }
+});
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
