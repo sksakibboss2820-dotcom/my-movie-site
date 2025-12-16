@@ -3,11 +3,11 @@ const mongoose = require('mongoose');
 const path = require('path');
 const app = express();
 
-// ডাটাবেস লিঙ্কটি এখানে আরও পরিষ্কার করে দেওয়া হয়েছে
-const mongoURI = "mongodb+srv://sksakibboss2820:sakib2820@cluster0.z021v.mongodb.net/movieDB?retryWrites=true&w=majority&appName=Cluster0";
+// ১. আপনার নতুন পাসওয়ার্ড "54321sk" দিয়ে আপডেট করা লিঙ্ক
+const mongoURI = "mongodb+srv://sakibulhasan5:54321sk@cluster0.z021v.mongodb.net/movieDB?retryWrites=true&w=majority";
 
 mongoose.connect(mongoURI)
-    .then(() => console.log('✅ Connected to MongoDB Atlas!'))
+    .then(() => console.log('✅ Connected to MongoDB Successfully!'))
     .catch(err => console.error('❌ MongoDB Connection Error:', err));
 
 const movieSchema = new mongoose.Schema({
@@ -20,7 +20,7 @@ const Movie = mongoose.model('Movie', movieSchema);
 
 app.use(express.static(path.join(__dirname, '/')));
 
-// ১. মুভি লিস্ট পাওয়ার রুট
+// ২. মুভি লিস্টের API
 app.get('/api/movies', async (req, res) => {
     try {
         const movies = await Movie.find();
@@ -30,7 +30,7 @@ app.get('/api/movies', async (req, res) => {
     }
 });
 
-// ২. স্যাম্পল মুভি যোগ করার রুট
+// ৩. স্যাম্পল মুভি যোগ করার লিঙ্ক
 app.get('/add-sample', async (req, res) => {
     try {
         const sampleMovies = [
@@ -40,17 +40,13 @@ app.get('/add-sample', async (req, res) => {
         await Movie.insertMany(sampleMovies);
         res.send("<h1>Success! Movies added. Now refresh your home page.</h1>");
     } catch (err) {
-        res.status(500).send(err.message);
+        res.status(500).send("Error: " + err.message);
     }
 });
 
-// ৩. রুট এরর এড়ানোর সবচেয়ে সহজ পদ্ধতি
-app.use((req, res, next) => {
-    if (req.path.startsWith('/api') || req.path === '/add-sample') {
-        return next();
-    }
+app.use((req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+const PORT = process.env.PORT || 10000;
+app.listen(PORT, () => console.log(`🚀 Server active on port ${PORT}`));
