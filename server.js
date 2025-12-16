@@ -4,7 +4,7 @@ const path = require('path');
 const app = express();
 
 // ১. এটি হলো স্ট্যান্ডার্ড কানেকশন লিঙ্ক যা ENOTFOUND এরর সমাধান করবে
-const mongoURI = "mongodb://sakibulhasan5:54321sk@cluster0-shard-00-00.z021v.mongodb.net:27017,cluster0-shard-00-01.z021v.mongodb.net:27017,cluster0-shard-00-02.z021v.mongodb.net:27017/movieDB?ssl=true&replicaSet=atlas-9m6y0f-shard-0&authSource=admin&retryWrites=true&w=majority";
+const mongoURI = "mongodb+srv://sakibtest:sakib123@cluster0.z021v.mongodb.net/movieDB?retryWrites=true&w=majority";
 
 mongoose.connect(mongoURI)
     .then(() => console.log('✅ Connected to MongoDB Successfully!'))
