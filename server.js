@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 const path = require('path');
 const app = express();
 
-// ১. আপনার নতুন পাসওয়ার্ড "54321sk" দিয়ে আপডেট করা লিঙ্ক
-const mongoURI = "mongodb+srv://sakibulhasan5:54321sk@cluster0.z021v.mongodb.net/movieDB?retryWrites=true&w=majority";
+// Standard connection string (ENOTFOUND এরর দূর করতে এটি সেরা)
+const mongoURI = "mongodb://sakibulhasan5:54321sk@cluster0-shard-00-00.z021v.mongodb.net:27017,cluster0-shard-00-01.z021v.mongodb.net:27017,cluster0-shard-00-02.z021v.mongodb.net:27017/movieDB?ssl=true&replicaSet=atlas-9m6y0f-shard-0&authSource=admin&retryWrites=true&w=majority";
 
 mongoose.connect(mongoURI)
     .then(() => console.log('✅ Connected to MongoDB Successfully!'))
@@ -20,7 +20,6 @@ const Movie = mongoose.model('Movie', movieSchema);
 
 app.use(express.static(path.join(__dirname, '/')));
 
-// ২. মুভি লিস্টের API
 app.get('/api/movies', async (req, res) => {
     try {
         const movies = await Movie.find();
@@ -30,7 +29,6 @@ app.get('/api/movies', async (req, res) => {
     }
 });
 
-// ৩. স্যাম্পল মুভি যোগ করার লিঙ্ক
 app.get('/add-sample', async (req, res) => {
     try {
         const sampleMovies = [
