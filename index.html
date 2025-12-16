@@ -3,31 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ST Movies List</title>
+    <title>ST Movies Collection</title>
     <style>
-        body { font-family: sans-serif; background: #121212; color: white; text-align: center; }
-        .movie-card { border: 1px solid #444; margin: 10px; padding: 15px; border-radius: 8px; background: #1e1e1e; }
-        h1 { color: #e50914; }
+        body { font-family: Arial, sans-serif; background: #141414; color: white; text-align: center; }
+        .movie-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; padding: 20px; }
+        .movie-card { background: #222; border-radius: 10px; padding: 15px; width: 200px; }
+        img { width: 100%; border-radius: 5px; }
+        h2 { color: #e50914; }
     </style>
 </head>
 <body>
     <h1>🎬 My Movie Collection</h1>
-    <div id="movie-list">Loading movies...</div>
+    <div id="movies" class="movie-container">Loading movies...</div>
 
     <script>
-        fetch('http://localhost:3000/all-movies')
+        fetch('/api/movies')
             .then(res => res.json())
             .then(data => {
-                const list = document.getElementById('movie-list');
-                list.innerHTML = data.map(m => `
+                const container = document.getElementById('movies');
+                container.innerHTML = data.map(movie => `
                     <div class="movie-card">
-                        <h3>${m.title}</h3>
-                        <p>Genre: ${m.genre}</p>
-                        <a href="${m.videoUrl}" style="color: cyan;">Watch Now</a>
+                        <img src="${movie.image}" alt="${movie.title}">
+                        <h3>${movie.title}</h3>
+                        <p>Rating: ⭐${movie.rating}</p>
                     </div>
                 `).join('');
-            })
-            .catch(err => document.getElementById('movie-list').innerHTML = "Error loading movies.");
+            });
     </script>
 </body>
 </html>
