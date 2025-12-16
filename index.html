@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ST Movies List</title>
+    <style>
+        body { font-family: sans-serif; background: #121212; color: white; text-align: center; }
+        .movie-card { border: 1px solid #444; margin: 10px; padding: 15px; border-radius: 8px; background: #1e1e1e; }
+        h1 { color: #e50914; }
+    </style>
+</head>
+<body>
+    <h1>🎬 My Movie Collection</h1>
+    <div id="movie-list">Loading movies...</div>
+
+    <script>
+        fetch('http://localhost:3000/all-movies')
+            .then(res => res.json())
+            .then(data => {
+                const list = document.getElementById('movie-list');
+                list.innerHTML = data.map(m => `
+                    <div class="movie-card">
+                        <h3>${m.title}</h3>
+                        <p>Genre: ${m.genre}</p>
+                        <a href="${m.videoUrl}" style="color: cyan;">Watch Now</a>
+                    </div>
+                `).join('');
+            })
+            .catch(err => document.getElementById('movie-list').innerHTML = "Error loading movies.");
+    </script>
+</body>
+</html>
