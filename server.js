@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// ডাটাবেস লিঙ্ক (সঠিক করা হয়েছে)
+// লিঙ্কের শুরুতে কোনো '_' নেই, এটি নিশ্চিত করা হয়েছে
 const mongoURI = "mongodb+srv://sakibtest:sakib123@cluster0.z021v.mongodb.net/movieDB?retryWrites=true&w=majority";
 
 mongoose.connect(mongoURI)
@@ -32,11 +32,8 @@ app.get('/api/movies', async (req, res) => {
   } catch (err) { res.status(500).json({ message: err.message }); }
 });
 
-// হোম পেজ রাউট
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.listen(port, () => {
-  console.log(`🚀 Server running on port ${port}`);
-});
+app.listen(port, () => console.log(`🚀 Server on port ${port}`));
