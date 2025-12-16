@@ -1,43 +1,39 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const path = require('path');
 const app = express();
-const PORT = 3000;
 
-// আপনার ডেটাবেস কানেকশন লিঙ্ক
-const dbURI = 'mongodb+srv://sakibulhasan5:54321sk@cluster0.v8xrx2q.mongodb.net/?appName=Cluster0';
+// MongoDB connection string
+const mongoURI = "mongodb+srv://sksakibboss2820:sakib2820@cluster0.z021v.mongodb.net/movieDB?retryWrites=true&w=majority";
 
-mongoose.connect(dbURI)
-  .then(() => console.log('✅ Success: Connected to MongoDB Atlas!'))
-  .catch((err) => console.log('❌ Connection Error:', err));
+mongoose.connect(mongoURI)
+    .then(() => console.log('Connected to MongoDB Atlas!'))
+    .catch(err => console.error('Error connecting to MongoDB:', err));
 
-app.get('/', (req, res) => {
-  res.send('ST Movies Server is running and connected to Database!');
-});
-app.use(express.json());
-app.use(express.static(__dirname));
-const Movie = mongoose.model('Movie', new mongoose.Schema({
+// Movie Schema
+const movieSchema = new mongoose.Schema({
     title: String,
-    genre: String,
-    videoUrl: String
-}));
+    image: String,
+    rating: String,
+    genre: String
+});
+const Movie = mongoose.model('Movie', movieSchema);
 
-app.post('/add-movie', async (req, res) => {
-    try {
-        const newMovie = new Movie(req.body);
-        await newMovie.save();
-        res.status(201).send("✅ Movie Added Successfully!");
-    } catch (error) {
-        res.status(400).send("❌ Error: " + error.message);
-    }
-});
-app.listen(PORT, () => {
-  console.log(`🚀 Server is active on port ${PORT}`);
-});
-app.get('/all-movies', async (req, res) => {
+app.use(express.static(path.join(__dirname, '/')));
+
+// API route to get movies from DB
+app.get('/api/movies', async (req, res) => {
     try {
         const movies = await Movie.find();
         res.json(movies);
-    } catch (error) {
-        res.status(500).send("❌ Error: " + error.message);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
     }
 });
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
