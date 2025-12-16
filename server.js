@@ -10,18 +10,19 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// লিঙ্কের শুরুতে কোনো '_' নেই, এটি নিশ্চিত করা হয়েছে
-const mongoURI = "mongodb+srv://sakibtest:sakib123@cluster0.z021v.mongodb.net/movieDB?retryWrites=true&w=majority";
+// Render-এর Settings থেকে লিঙ্কটি অটোমেটিক নেবে
+const mongoURI = process.env.MONGO_URI;
 
-mongoose.connect(mongoURI)
-  .then(() => console.log('✅ Connected to MongoDB Successfully!'))
-  .catch(err => console.error('❌ MongoDB Connection Error:', err));
+if (!mongoURI) {
+  console.error("❌ MONGO_URI is not set in Render Environment Variables!");
+} else {
+  mongoose.connect(mongoURI)
+    .then(() => console.log('✅ Connected to MongoDB Successfully!'))
+    .catch(err => console.error('❌ MongoDB Connection Error:', err));
+}
 
 const movieSchema = new mongoose.Schema({
-  title: String,
-  image: String,
-  downloadLink: String,
-  category: String
+  title: String, image: String, downloadLink: String, category: String
 });
 const Movie = mongoose.model('Movie', movieSchema);
 
@@ -36,4 +37,4 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.listen(port, () => console.log(`🚀 Server on port ${port}`));
+app.listen(port, () => console.log(`🚀 Server running on port ${port}`));
