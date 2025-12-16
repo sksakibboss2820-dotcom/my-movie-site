@@ -3,14 +3,12 @@ const mongoose = require('mongoose');
 const path = require('path');
 const app = express();
 
-// MongoDB connection string
 const mongoURI = "mongodb+srv://sksakibboss2820:sakib2820@cluster0.z021v.mongodb.net/movieDB?retryWrites=true&w=majority";
 
 mongoose.connect(mongoURI)
     .then(() => console.log('Connected to MongoDB Atlas!'))
     .catch(err => console.error('Error connecting to MongoDB:', err));
 
-// Movie Schema
 const movieSchema = new mongoose.Schema({
     title: String,
     image: String,
@@ -21,7 +19,6 @@ const Movie = mongoose.model('Movie', movieSchema);
 
 app.use(express.static(path.join(__dirname, '/')));
 
-// API route to get movies from DB
 app.get('/api/movies', async (req, res) => {
     try {
         const movies = await Movie.find();
@@ -30,18 +27,21 @@ app.get('/api/movies', async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 });
+
+// এই রুটটি আপনার ডাটাবেসে মুভি যোগ করবে
 app.get('/add-sample', async (req, res) => {
     try {
         const sampleMovies = [
-            { title: "Inception", image: "https://bit.ly/3YQ6p5X", rating: "8.8", genre: "Sci-Fi" },
-            { title: "Interstellar", image: "https://bit.ly/3YQ6p5X", rating: "8.7", genre: "Adventure" }
+            { title: "Inception", image: "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_.jpg", rating: "8.8", genre: "Sci-Fi" },
+            { title: "Interstellar", image: "https://m.media-amazon.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjktY2FiMmZkNWIyODZiXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg", rating: "8.7", genre: "Adventure" }
         ];
         await Movie.insertMany(sampleMovies);
-        res.send("Sample movies added successfully!");
+        res.send("<h1>Movies added successfully! Now visit your home page.</h1>");
     } catch (err) {
         res.status(500).send(err.message);
     }
 });
+
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
