@@ -2,33 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ST Movies Collection</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #141414; color: white; text-align: center; }
+        body { font-family: sans-serif; background: #141414; color: white; text-align: center; }
         .movie-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; padding: 20px; }
         .movie-card { background: #222; border-radius: 10px; padding: 15px; width: 200px; }
         img { width: 100%; border-radius: 5px; }
-        h2 { color: #e50914; }
     </style>
 </head>
 <body>
-    <h1>🎬 My Movie Collection</h1>
-    <div id="movies" class="movie-container">Loading movies...</div>
-
+    <h1>🎬 ST Movies Collection</h1>
+    <div id="movies" class="movie-container">Loading...</div>
     <script>
-        fetch('/api/movies')
-            .then(res => res.json())
-            .then(data => {
-                const container = document.getElementById('movies');
-                container.innerHTML = data.map(movie => `
-                    <div class="movie-card">
-                        <img src="${movie.image}" alt="${movie.title}">
-                        <h3>${movie.title}</h3>
-                        <p>Rating: ⭐${movie.rating}</p>
-                    </div>
-                `).join('');
-            });
+        fetch('/api/movies').then(res => res.json()).then(data => {
+            document.getElementById('movies').innerHTML = data.map(m => `
+                <div class="movie-card">
+                    <img src="${m.image}" alt="${m.title}">
+                    <h3>${m.title}</h3>
+                    <p>⭐ ${m.rating}</p>
+                </div>
+            `).join('');
+        });
     </script>
 </body>
 </html>
