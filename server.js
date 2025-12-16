@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const path = require('path');
 const app = express();
 
-// Standard connection string (ENOTFOUND এরর দূর করতে এটি সেরা)
+// ১. এটি হলো স্ট্যান্ডার্ড কানেকশন লিঙ্ক যা ENOTFOUND এরর সমাধান করবে
 const mongoURI = "mongodb://sakibulhasan5:54321sk@cluster0-shard-00-00.z021v.mongodb.net:27017,cluster0-shard-00-01.z021v.mongodb.net:27017,cluster0-shard-00-02.z021v.mongodb.net:27017/movieDB?ssl=true&replicaSet=atlas-9m6y0f-shard-0&authSource=admin&retryWrites=true&w=majority";
 
 mongoose.connect(mongoURI)
@@ -36,9 +36,9 @@ app.get('/add-sample', async (req, res) => {
             { title: "Interstellar", image: "https://m.media-amazon.com/images/M/MV5BZjdkOTU3MDktN2IxOS00OGEyLWFmMjktY2FiMmZkNWIyODZiXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_.jpg", rating: "8.7", genre: "Adventure" }
         ];
         await Movie.insertMany(sampleMovies);
-        res.send("<h1>Success! Movies added. Now refresh your home page.</h1>");
+        res.send("<h1>Success! Movies added. Now visit your site.</h1>");
     } catch (err) {
-        res.status(500).send("Error: " + err.message);
+        res.status(500).send("Database Error: " + err.message);
     }
 });
 
@@ -47,4 +47,4 @@ app.use((req, res) => {
 });
 
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => console.log(`🚀 Server active on port ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Server on port ${PORT}`));
