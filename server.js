@@ -11,10 +11,9 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// MongoDB Connection URI (Updated with new user: sakibtest)
+// MongoDB Connection
 const mongoURI = "mongodb+srv://sakibtest:sakib123@cluster0.z021v.mongodb.net/movieDB?retryWrites=true&w=majority";
 
-// Connect to MongoDB
 mongoose.connect(mongoURI)
   .then(() => console.log('✅ Connected to MongoDB Successfully!'))
   .catch(err => console.error('❌ MongoDB Connection Error:', err));
@@ -29,7 +28,7 @@ const movieSchema = new mongoose.Schema({
 
 const Movie = mongoose.model('Movie', movieSchema);
 
-// Routes
+// API Route
 app.get('/api/movies', async (req, res) => {
   try {
     const movies = await Movie.find();
@@ -39,7 +38,7 @@ app.get('/api/movies', async (req, res) => {
   }
 });
 
-// Sample Data Add Route
+// Sample Data Route
 app.get('/add-sample', async (req, res) => {
   try {
     const sampleMovies = [
@@ -48,23 +47,17 @@ app.get('/add-sample', async (req, res) => {
         image: "https://image.tmdb.org/t/p/w500/t6Sna4vR9p9z989p9z989p9z989.jpg",
         downloadLink: "#",
         category: "Sci-Fi"
-      },
-      {
-        title: "Interstellar",
-        image: "https://image.tmdb.org/t/p/w500/gEU2QniE6EOPnsQzYvSt7pC6uBX.jpg",
-        downloadLink: "#",
-        category: "Sci-Fi"
       }
     ];
     await Movie.insertMany(sampleMovies);
-    res.send("<h1>✅ Success! Sample movies added to database.</h1><a href='/'>Go to Home</a>");
+    res.send("<h1>✅ Success! Movies added.</h1><a href='/'>Go Home</a>");
   } catch (err) {
-    res.status(500).send("Error adding movies: " + err.message);
+    res.status(500).send("Error: " + err.message);
   }
 });
 
-// Serve Frontend
-app.get('*', (req, res) => {
+// Serve Frontend (যাতে '*' রাউটে এরর না হয়)
+app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
